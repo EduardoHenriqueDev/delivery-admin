@@ -7,11 +7,15 @@ export default function OrderCard({
     order: OrderWithItems
     onClick: () => void
 }) {
-    const isDelivered = order.status === 'delivered'
+    // Considera entregues, cancelados e rejeitados como "apagados"
+    const isInactive =
+        order.status === 'delivered' || order.status === 'cancelled' || order.status === 'rejected'
 
     return (
         <div
-            className={`rounded-xl p-4 shadow-md cursor-pointer transition border border-[#2a2a2a] ${isDelivered ? 'bg-[#1c1c1c] opacity-60 hover:opacity-70' : 'bg-[#23232b] hover:shadow-lg'
+            className={`rounded-xl p-4 shadow-md cursor-pointer transition border border-[#2a2a2a] ${isInactive
+                    ? 'bg-[#1c1c1c] opacity-60 hover:opacity-70'
+                    : 'bg-[#23232b] hover:shadow-lg'
                 }`}
             onClick={onClick}
         >
@@ -30,14 +34,16 @@ export default function OrderCard({
                                             ? 'bg-green-700 text-green-200'
                                             : order.status === 'rejected'
                                                 ? 'bg-red-700 text-red-200'
-                                                : 'bg-gray-700 text-gray-200'
+                                                : order.status === 'cancelled'
+                                                    ? 'bg-gray-700 text-gray-200'
+                                                    : 'bg-gray-700 text-gray-200'
                         }`}
                 >
                     {STATUS_LABELS[order.status]}
                 </span>
             </div>
 
-            <div className={`text-sm ${isDelivered ? 'text-gray-400' : 'text-gray-300'} space-y-1`}>
+            <div className={`text-sm ${isInactive ? 'text-gray-400' : 'text-gray-300'} space-y-1`}>
                 <div>
                     <strong>Cliente:</strong> {order.customer_name}
                 </div>

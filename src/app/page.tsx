@@ -180,7 +180,7 @@ export default function AdminOrdersPage() {
         <div className="flex items-center gap-2 mb-8">
           <button
             onClick={() => window.history.back()}
-            className="text-[#cc9b3b] hover:text-[#b88b30] transition focus:outline-none"
+            className="text-[#cc9b3b] hover:text-[#b88b30] transition focus:default-none"
           >
             <ArrowLeft className="w-6 h-6" />
           </button>

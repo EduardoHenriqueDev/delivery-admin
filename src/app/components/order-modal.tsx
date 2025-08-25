@@ -43,7 +43,7 @@ export default function OrderModal({
           exit={{ scale: 0.95, y: 40 }}
         >
           <button
-            className="absolute top-4 right-4 text-gray-400 hover:text-white focus:outline-none"
+            className="absolute top-4 right-4 text-gray-400 hover:text-white focus:default-none"
             onClick={onClose}
           >
             <X className="w-6 h-6" />

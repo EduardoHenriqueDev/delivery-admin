@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Delivery Admin
 
-First, run the development server:
+Um painel administrativo moderno para gestão de clientes e pedidos de delivery, desenvolvido com Next.js, React, Supabase e uma interface elegante.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ✨ Funcionalidades
+
+- **Listagem de clientes** com dados de contato, endereço, total de pedidos e valor gasto.
+- **Visualização detalhada** do cliente em modal, incluindo histórico de pedidos e link para localização no Google Maps.
+- **Drawer lateral** para navegação rápida.
+- **Integração com Supabase** para autenticação e persistência dos dados.
+- **Interface responsiva** e animada com Framer Motion.
+- **Notificações** com Sonner.
+
+## 🚀 Tecnologias Utilizadas
+
+- [Next.js](https://nextjs.org/)
+- [React](https://react.dev/)
+- [Supabase](https://supabase.com/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Lucide React Icons](https://lucide.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Sonner](https://sonner.emilkowal.ski/) (notificações)
+
+## 📁 Estrutura de Pastas
+
+```
+components/         # Componentes reutilizáveis (cards, modais, drawer, etc)
+hooks/              # Hooks customizados
+lib/                # Funções utilitárias e integração com Supabase
+types.ts            # Tipos globais (Customer, Order)
+src/app/clientes/   # Página de clientes
+src/app/suporte/    # Página de suporte
+public/             # Assets estáticos
+supabase/           # Migrations e estrutura do banco
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ⚡ Como rodar o projeto
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone o repositório:**
+   ```sh
+   git clone <url-do-repo>
+   cd delivery-admin
+   ```
+2. **Instale as dependências:**
+   ```sh
+   npm install
+   ```
+3. **Configure o Supabase:**
+   - Crie um projeto no [Supabase](https://supabase.com/)
+   - Copie as variáveis de ambiente para `.env.local`:
+     ```env
+     NEXT_PUBLIC_SUPABASE_URL=...
+     NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+     ```
+   - Execute as migrations SQL em `supabase/migrations/`.
+4. **Inicie o servidor de desenvolvimento:**
+   ```sh
+   npm run dev
+   ```
+5. **Acesse:**
+   - [http://localhost:3000](http://localhost:3000)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Scripts úteis
 
-## Learn More
+- `npm run dev` — inicia o servidor Next.js em modo desenvolvimento
+- `npm run build` — build de produção
+- `npm run start` — inicia o servidor em produção
 
-To learn more about Next.js, take a look at the following resources:
+## 🖼️ Preview
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+![Preview do painel de clientes](public/preview.png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📌 Observações
 
-## Deploy on Vercel
+- O sistema é totalmente responsivo e pode ser utilizado em dispositivos móveis.
+- Para notificações sonoras, utilize o arquivo `public/notify.mp3`.
+- O código é modularizado para facilitar manutenção e evolução.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📄 Licença
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Este projeto está sob a licença MIT.
+
+---
+
+Feito com ❤️ para facilitar a gestão do seu delivery!

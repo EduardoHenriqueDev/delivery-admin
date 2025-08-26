@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { supabase } from '../../lib/supabase'
 import { toast } from 'sonner'
-import { Menu } from 'lucide-react'
 import Drawer from '../app/components/Drawer'
 import OrderList from './components/order-list'
 import OrderModal from './components/order-modal'
@@ -205,25 +204,11 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="min-h-screen flex relative bg-gradient-to-b from-[#18181b] to-[#1f1f23] text-white overflow-x-hidden">
-      {/* Drawer Lateral */}
-      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
 
-      {/* Botão Hamburger Fixo Direito */}
-      <button
-        className={`
-          fixed top-6 right-6 z-50 p-3 rounded-full
-          bg-transparent shadow-2xl
-          transform transition-all duration-300
-          ${drawerOpen ? 'opacity-0 pointer-events-none' : 'opacity-100 hover:scale-110'}
-        `}
-        onClick={() => setDrawerOpen(true)}
-        aria-label="Abrir menu"
-      >
-        <Menu className="w-6 h-6 text-white" />
-      </button>
+      <Drawer />
 
       {/* Conteúdo Principal */}
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-6 pl-20">
         <div className="max-w-7xl mx-auto">
           {/* Cabeçalho */}
           <div className="flex flex-wrap items-center justify-between gap-4 mb-8">

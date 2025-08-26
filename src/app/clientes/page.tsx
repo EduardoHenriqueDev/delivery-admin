@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../../../lib/supabase'
 import { toast } from 'sonner'
 import { AnimatePresence } from 'framer-motion'
-import { Menu } from 'lucide-react'
 import Drawer from '../components/Drawer'
 import CustomerCard from './components/CustomerCard'
 import CustomerModal from './components/CustomerModal'
@@ -86,19 +85,13 @@ export default function ClientesPage() {
 
   return (
     <div className="min-h-screen bg-[#18181b] text-white p-6 flex">
-      {/* Drawer */}
-      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
 
-      <div className="flex-1">
+      <Drawer />
+
+      <div className="flex-1 p-6 pl-20">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-[#cc9b3b]">Clientes</h1>
-          <button
-            onClick={() => setDrawerOpen(true)}
-            className="p-2 rounded-lg bg-[#1f1f23] hover:bg-[#2a2a2f] transition"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
         </div>
 
         {loading ? (

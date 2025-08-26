@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { MapPin, X, Check, Utensils, Truck, Package } from 'lucide-react'
 import { STATUS_LABELS, formatPrice, OrderWithItems } from '../page'
+import { useEffect, useState } from 'react'
 
 const STATUS_ACTIONS: Record<string, { label: string; next: string; icon: React.FC<any> }[]> = {
   pending: [
@@ -27,6 +28,37 @@ interface OrderModalProps {
 }
 
 export default function OrderModal({ order, onClose, updating, updateOrderStatus }: OrderModalProps) {
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null)
+
+  // Se não houver coordenadas no pedido, tenta buscar a partir do endereço
+  useEffect(() => {
+    const fetchCoords = async () => {
+      if (!order.delivery_lat || !order.delivery_lng) {
+        if (order.delivery_address) {
+          try {
+            const res = await fetch(
+              `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+                order.delivery_address
+              )}`
+            )
+            const data = await res.json()
+            if (data && data.length > 0) {
+              setCoords({
+                lat: parseFloat(data[0].lat),
+                lng: parseFloat(data[0].lon),
+              })
+            }
+          } catch (err) {
+            console.error('Erro ao buscar coordenadas:', err)
+          }
+        }
+      } else {
+        setCoords({ lat: order.delivery_lat, lng: order.delivery_lng })
+      }
+    }
+    fetchCoords()
+  }, [order])
+
   return (
     <AnimatePresence>
       <motion.div
@@ -87,7 +119,7 @@ export default function OrderModal({ order, onClose, updating, updateOrderStatus
           </div>
 
           {/* Mapa */}
-          {order.delivery_lat && order.delivery_lng && (
+          {coords && (
             <div className="mt-6 rounded-lg overflow-hidden border-2 border-yellow-400">
               <h3 className="flex items-center gap-2 text-yellow-400 font-semibold mb-2 px-2 pt-2">
                 <MapPin className="w-4 h-4" /> Local da entrega
@@ -99,10 +131,10 @@ export default function OrderModal({ order, onClose, updating, updateOrderStatus
                 className="rounded-b-lg"
                 loading="lazy"
                 style={{ filter: "grayscale(0.2)" }}
-                src={`https://www.openstreetmap.org/export/embed.html?bbox=${order.delivery_lng - 0.002},${order.delivery_lat - 0.002},${order.delivery_lng + 0.002},${order.delivery_lat + 0.002}&layer=mapnik&marker=${order.delivery_lat},${order.delivery_lng}`}
+                src={`https://www.openstreetmap.org/export/embed.html?bbox=${coords.lng - 0.002},${coords.lat - 0.002},${coords.lng + 0.002},${coords.lat + 0.002}&layer=mapnik&marker=${coords.lat},${coords.lng}`}
               />
               <a
-                href={`https://www.openstreetmap.org/?mlat=${order.delivery_lat}&mlon=${order.delivery_lng}#map=18/${order.delivery_lat}/${order.delivery_lng}`}
+                href={`https://www.openstreetmap.org/?mlat=${coords.lat}&mlon=${coords.lng}#map=18/${coords.lat}/${coords.lng}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block text-xs text-yellow-400 mt-1 px-2 underline"
@@ -123,11 +155,10 @@ export default function OrderModal({ order, onClose, updating, updateOrderStatus
                   onClick={() => updateOrderStatus(order.id, action.next)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-semibold transition ${
-                    updating
+                  className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-semibold transition ${updating
                       ? "bg-gray-700 text-gray-400 cursor-not-allowed"
                       : "bg-yellow-400 hover:bg-yellow-500 text-black"
-                  }`}
+                    }`}
                 >
                   <Icon className="w-5 h-5" />
                   {action.label}

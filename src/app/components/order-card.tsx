@@ -34,18 +34,18 @@ export default function OrderCard({ order, onClick }: OrderCardProps) {
     const StatusIcon = currentStatus.icon
 
     // Link do Maps para QR
-    const mapsLink =
-        order.delivery_lat && order.delivery_lng
+    const mapsLink = order.delivery_address
+        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.delivery_address)}`
+        : order.delivery_lat && order.delivery_lng
             ? `https://www.google.com/maps/search/?api=1&query=${order.delivery_lat},${order.delivery_lng}`
             : null
 
     return (
         <div
-            className={`group relative rounded-2xl p-5 shadow-lg cursor-pointer transition-all border ${
-                isInactive
-                    ? 'bg-gray-900 border-gray-700 opacity-60 hover:opacity-80'
-                    : 'bg-gray-800 border-gray-700 hover:shadow-2xl'
-            }`}
+            className={`group relative rounded-2xl p-5 shadow-lg cursor-pointer transition-all border ${isInactive
+                ? 'bg-gray-900 border-gray-700 opacity-60 hover:opacity-80'
+                : 'bg-gray-800 border-gray-700 hover:shadow-2xl'
+                }`}
             onClick={onClick}
         >
             {/* Top Row: Order ID + Status */}

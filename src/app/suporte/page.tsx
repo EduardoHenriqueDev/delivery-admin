@@ -2,11 +2,11 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { MessageCircle, Instagram, Facebook, Menu as MenuIcon } from 'lucide-react'
+import { MessageCircle, Instagram, Facebook } from 'lucide-react'
 import Link from 'next/link'
 import Drawer from '../components/Drawer'
 import Image from 'next/image'
-import ParticleBackground from '../../../ui/ParticleBackground'
+import ParticleBackground from '../../../components/ui/ParticleBackground'
 
 export default function Page() {
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -16,17 +16,7 @@ export default function Page() {
       {/* Background de partículas */}
       <ParticleBackground />
 
-      {/* Drawer */}
-      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
-
-      {/* Botão Hamburger fixo à direita */}
-      <button
-        className="fixed top-6 right-6 z-50 p-3 rounded-full bg-[#1f1f23] hover:bg-[#cc9b3b] transition-all shadow-2xl hover:scale-110"
-        onClick={() => setDrawerOpen(true)}
-        aria-label="Abrir menu"
-      >
-        <MenuIcon className="w-6 h-6 text-white hover:text-black transition" />
-      </button>
+      <Drawer />
 
       {/* Conteúdo principal */}
       <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-12">

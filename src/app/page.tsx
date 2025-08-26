@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { supabase } from '../../lib/supabase'
 import { toast } from 'sonner'
 import { Menu } from 'lucide-react'
@@ -30,6 +30,7 @@ export type OrderWithItems = {
   status: string
   delivery_lat?: number | null
   delivery_lng?: number | null
+  created_at?: string
   items: OrderItem[]
 }
 
@@ -93,6 +94,7 @@ export default function AdminOrdersPage() {
             status: order.status,
             delivery_lat: order.delivery_lat ?? null,
             delivery_lng: order.delivery_lng ?? null,
+            created_at: order.created_at,
             items: order.order_items.map((item: any) => ({
               id: item.id,
               order_id: item.order_id,
@@ -133,6 +135,7 @@ export default function AdminOrdersPage() {
             status: newOrderRaw.status,
             delivery_lat: newOrderRaw.delivery_lat ?? null,
             delivery_lng: newOrderRaw.delivery_lng ?? null,
+            created_at: newOrderRaw.created_at,
             items: (newOrderRaw.order_items ?? []).map((item: any) => ({
               id: item.id,
               order_id: item.order_id,
@@ -184,6 +187,22 @@ export default function AdminOrdersPage() {
     ...filteredOrders.filter(o => ['delivered','cancelled','rejected'].includes(o.status))
   ]
 
+  // =========================
+  // GANHOS DO DIA
+  // =========================
+  const today = useMemo(() => {
+    const now = new Date()
+    return orders.filter(o => {
+      if (!o.created_at) return false
+      const created = new Date(o.created_at)
+      return created.toDateString() === now.toDateString() && o.status === 'delivered'
+    })
+  }, [orders])
+
+  const dailyRevenueCents = useMemo(() => {
+    return today.reduce((acc, o) => acc + o.total_cents, 0)
+  }, [today])
+
   return (
     <div className="min-h-screen flex relative bg-gradient-to-b from-[#18181b] to-[#1f1f23] text-white overflow-x-hidden">
       {/* Drawer Lateral */}
@@ -206,7 +225,7 @@ export default function AdminOrdersPage() {
       {/* Conteúdo Principal */}
       <div className="flex-1 p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Cabeçalho com Filtro */}
+          {/* Cabeçalho */}
           <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#cc9b3b] to-[#ffd166]">
               Administração
@@ -227,7 +246,13 @@ export default function AdminOrdersPage() {
             </div>
           </div>
 
-          {/* Lista de Pedidos com Cards Futuristas */}
+          {/* Card de Ganhos do Dia */}
+          <div className="mb-6 p-4 rounded-2xl bg-gray-800 border border-yellow-400 flex items-center justify-between max-w-sm">
+            <span className="font-semibold text-yellow-400 text-lg">Ganhos do dia</span>
+            <span className="text-green-400 font-bold text-xl">{formatPrice(dailyRevenueCents)}</span>
+          </div>
+
+          {/* Lista de Pedidos */}
           <OrderList
             loading={loading}
             orders={sortedOrders}

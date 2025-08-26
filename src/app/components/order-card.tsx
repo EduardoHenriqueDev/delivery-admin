@@ -1,71 +1,126 @@
-import { STATUS_LABELS, formatPrice, OrderWithItems } from '../page'
+'use client'
 
-export default function OrderCard({
-    order,
-    onClick,
-}: {
+import { useState } from 'react'
+import { STATUS_LABELS, formatPrice, OrderWithItems } from '../page'
+import { CheckCircle, Clock, XCircle, Truck, Package, QrCode } from 'lucide-react'
+import { QRCodeCanvas } from 'qrcode.react'
+
+interface OrderCardProps {
     order: OrderWithItems
     onClick: () => void
-}) {
+}
+
+export default function OrderCard({ order, onClick }: OrderCardProps) {
+    const [showQR, setShowQR] = useState(false)
+
     // Considera entregues, cancelados e rejeitados como "apagados"
     const isInactive =
         order.status === 'delivered' || order.status === 'cancelled' || order.status === 'rejected'
 
+    const statusStyles: Record<
+        string,
+        { bg: string; text: string; icon: React.FC<React.SVGProps<SVGSVGElement>> }
+    > = {
+        pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: Clock },
+        accepted: { bg: 'bg-blue-100', text: 'text-blue-800', icon: CheckCircle },
+        preparing: { bg: 'bg-orange-100', text: 'text-orange-800', icon: Package },
+        out_for_delivery: { bg: 'bg-purple-100', text: 'text-purple-800', icon: Truck },
+        delivered: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
+        rejected: { bg: 'bg-red-100', text: 'text-red-800', icon: XCircle },
+        cancelled: { bg: 'bg-gray-200', text: 'text-gray-700', icon: XCircle },
+    }
+
+    const currentStatus = statusStyles[order.status] || statusStyles.cancelled
+    const StatusIcon = currentStatus.icon
+
+    // Link do Maps para QR
+    const mapsLink =
+        order.delivery_lat && order.delivery_lng
+            ? `https://www.google.com/maps/search/?api=1&query=${order.delivery_lat},${order.delivery_lng}`
+            : null
+
     return (
         <div
-            className={`rounded-xl p-4 shadow-md cursor-pointer transition border border-[#2a2a2a] ${isInactive
-                    ? 'bg-[#1c1c1c] opacity-60 hover:opacity-70'
-                    : 'bg-[#23232b] hover:shadow-lg'
-                }`}
+            className={`group relative rounded-2xl p-5 shadow-lg cursor-pointer transition-all border ${
+                isInactive
+                    ? 'bg-gray-900 border-gray-700 opacity-60 hover:opacity-80'
+                    : 'bg-gray-800 border-gray-700 hover:shadow-2xl'
+            }`}
             onClick={onClick}
         >
-            <div className="flex justify-between items-center mb-2">
-                <h3 className="text-lg font-bold text-[#cc9b3b]">#{order.id.slice(0, 8)}</h3>
-                <span
-                    className={`px-2 py-1 rounded text-xs font-bold ${order.status === 'pending'
-                            ? 'bg-yellow-700 text-yellow-200'
-                            : order.status === 'accepted'
-                                ? 'bg-blue-700 text-blue-200'
-                                : order.status === 'preparing'
-                                    ? 'bg-orange-700 text-orange-200'
-                                    : order.status === 'out_for_delivery'
-                                        ? 'bg-purple-700 text-purple-200'
-                                        : order.status === 'delivered'
-                                            ? 'bg-green-700 text-green-200'
-                                            : order.status === 'rejected'
-                                                ? 'bg-red-700 text-red-200'
-                                                : order.status === 'cancelled'
-                                                    ? 'bg-gray-700 text-gray-200'
-                                                    : 'bg-gray-700 text-gray-200'
-                        }`}
+            {/* Top Row: Order ID + Status */}
+            <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-semibold text-yellow-400 tracking-wide">
+                    #{order.id.slice(0, 8)}
+                </h3>
+
+                <div
+                    className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold ${currentStatus.bg} ${currentStatus.text} transition-all`}
                 >
-                    {STATUS_LABELS[order.status]}
-                </span>
-            </div>
-
-            <div className={`text-sm ${isInactive ? 'text-gray-400' : 'text-gray-300'} space-y-1`}>
-                <div>
-                    <strong>Cliente:</strong> {order.customer_name}
-                </div>
-                <div>
-                    <strong>Endereço:</strong>{' '}
-                    {order.delivery_address || <span className="italic text-gray-400">Não informado</span>}
-                </div>
-                <div>
-                    <strong>Total:</strong> {formatPrice(order.total_cents)}
-                </div>
-
-                <div className="mt-2">
-                    <strong>Itens:</strong>
-                    <ul className="ml-4 list-disc max-h-24 overflow-auto text-xs">
-                        {(order.items || []).map((item) => (
-                            <li key={item.id}>
-                                {item.product?.name || 'Produto desconhecido'} — Qtd: {item.quantity}
-                            </li>
-                        ))}
-                    </ul>
+                    <StatusIcon className="w-4 h-4" />
+                    <span>{STATUS_LABELS[order.status]}</span>
                 </div>
             </div>
+
+            {/* Customer Info */}
+            <div className={`text-sm space-y-2 ${isInactive ? 'text-gray-400' : 'text-gray-300'}`}>
+                <div>
+                    <strong className="font-medium">Cliente:</strong> {order.customer_name}
+                </div>
+                <div>
+                    <strong className="font-medium">Endereço:</strong>{' '}
+                    {order.delivery_address || (
+                        <span className="italic text-gray-500">Não informado</span>
+                    )}
+                </div>
+                <div>
+                    <strong className="font-medium">Total:</strong>{' '}
+                    <span className="text-green-400 font-semibold">{formatPrice(order.total_cents)}</span>
+                </div>
+            </div>
+
+            {/* Items List */}
+            <div className="mt-3">
+                <strong className="block mb-1 text-sm font-medium text-gray-200">Itens:</strong>
+                <ul className="ml-4 list-disc max-h-28 overflow-auto text-xs scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+                    {(order.items || []).map((item) => (
+                        <li key={item.id} className="py-0.5 hover:bg-gray-700 rounded px-1 transition-colors">
+                            {item.product?.name || 'Produto desconhecido'} —{' '}
+                            <span className="font-medium">{item.quantity}x</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            {/* QR Code Button */}
+            {mapsLink && (
+                <div className="mt-3 flex flex-col items-start">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            setShowQR(!showQR)
+                        }}
+                        className="flex items-center gap-2 px-3 py-1 bg-yellow-400 text-black rounded-lg text-sm font-semibold hover:bg-yellow-500 transition"
+                    >
+                        <QrCode className="w-4 h-4" />
+                        {showQR ? 'Fechar QR' : 'Gerar QR para Maps'}
+                    </button>
+
+                    {showQR && (
+                        <div className="mt-2 p-2 bg-gray-900 rounded-xl border border-yellow-400">
+                            <QRCodeCanvas
+                                value={mapsLink}
+                                size={150}
+                                fgColor="#FFD166"
+                                bgColor="#1f1f23"
+                            />
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {/* Hover Overlay for Extra UX */}
+            <div className="absolute inset-0 rounded-2xl bg-white/5 opacity-0 group-hover:opacity-10 transition-opacity pointer-events-none" />
         </div>
     )
 }

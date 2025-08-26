@@ -39,7 +39,7 @@ supabase/           # Migrations e estrutura do banco
 
 1. **Clone o repositório:**
    ```sh
-   git clone <url-do-repo>
+   git clone https://github.com/EduardoHenriqueDev/delivery-admin.git
    cd delivery-admin
    ```
 2. **Instale as dependências:**

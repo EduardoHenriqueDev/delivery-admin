@@ -67,10 +67,13 @@ supabase/           # Migrations e estrutura do banco
 - `npm run build` — build de produção
 - `npm run start` — inicia o servidor em produção
 
+
 ## 🖼️ Preview
 
-![Preview do painel de clientes](public/preview.png)
-![Preview do modal de cliente](public/preview2.png)
+<div style="display: flex; gap: 16px; align-items: flex-start;">
+  <img src="public/preview.png" alt="Preview do painel de clientes" width="48%" />
+  <img src="public/preview2.png" alt="Preview do modal de cliente" width="48%" />
+</div>
 
 ## 📌 Observações
 

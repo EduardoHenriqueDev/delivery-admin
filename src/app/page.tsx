@@ -3,12 +3,13 @@
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../../lib/supabase'
 import { toast } from 'sonner'
-import { Hamburger, ArrowLeft } from 'lucide-react'
+import { Menu } from 'lucide-react'
+import Drawer from '../app/components/Drawer'
 import OrderList from './components/order-list'
 import OrderModal from './components/order-modal'
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
 
-type OrderItem = {
+export type OrderItem = {
   id: string
   order_id: string
   product_id: string
@@ -52,6 +53,7 @@ export default function AdminOrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<OrderWithItems | null>(null)
   const [updating, setUpdating] = useState(false)
   const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
   const previousOrderIdsRef = useRef<Set<string>>(new Set())
   const notificationSoundRef = useRef<HTMLAudioElement | null>(null)
@@ -65,7 +67,6 @@ export default function AdminOrdersPage() {
 
     const fetchOrders = async () => {
       setLoading(true)
-
       const { data, error } = await supabase
         .from('orders')
         .select('*, order_items(*, product:products(name))')
@@ -78,10 +79,9 @@ export default function AdminOrdersPage() {
         return
       }
 
-      // Monta cada pedido com seus items
       const ordersWithItems: OrderWithItems[] = (data as any[])
         .map((order) => {
-          if (!order.order_items) return null // ignora pedidos sem items
+          if (!order.order_items) return null
           return {
             id: order.id,
             customer_name: order.customer_name,
@@ -146,15 +146,10 @@ export default function AdminOrdersPage() {
 
           setOrders((prevOrders) => {
             const exists = prevOrders.find(o => o.id === newOrder.id)
-            if (exists) {
-              return prevOrders.map(o => (o.id === newOrder.id ? newOrder : o))
-            } else {
-              previousOrderIdsRef.current.add(newOrder.id)
-              if (notificationSoundRef.current) {
-                notificationSoundRef.current.play().catch(() => { })
-              }
-              return [newOrder, ...prevOrders]
-            }
+            if (exists) return prevOrders.map(o => (o.id === newOrder.id ? newOrder : o))
+            previousOrderIdsRef.current.add(newOrder.id)
+            if (notificationSoundRef.current) notificationSoundRef.current.play().catch(() => {})
+            return [newOrder, ...prevOrders]
           })
         }
       )
@@ -173,71 +168,75 @@ export default function AdminOrdersPage() {
       .update({ status: newStatus, updated_at: new Date().toISOString() })
       .eq('id', orderId)
 
-    if (error) {
-      toast.error('Erro ao atualizar status')
-    } else {
+    if (error) toast.error('Erro ao atualizar status')
+    else {
       toast.success('Status atualizado!')
-      setOrders((prev) =>
-        prev.map((order) => (order.id === orderId ? { ...order, status: newStatus } : order))
-      )
+      setOrders((prev) => prev.map((order) => (order.id === orderId ? { ...order, status: newStatus } : order)))
       if (selectedOrder?.id === orderId) setSelectedOrder(null)
     }
 
     setUpdating(false)
   }
 
-  const filteredOrders = orders.filter((o) =>
-    statusFilter === 'all' ? true : o.status === statusFilter
-  )
-
+  const filteredOrders = orders.filter((o) => statusFilter === 'all' ? true : o.status === statusFilter)
   const sortedOrders = [
-    ...filteredOrders.filter(
-      (o) => o.status !== 'delivered' && o.status !== 'cancelled' && o.status !== 'rejected'
-    ),
-    ...filteredOrders.filter(
-      (o) => o.status === 'delivered' || o.status === 'cancelled' || o.status === 'rejected'
-    ),
+    ...filteredOrders.filter(o => !['delivered','cancelled','rejected'].includes(o.status)),
+    ...filteredOrders.filter(o => ['delivered','cancelled','rejected'].includes(o.status))
   ]
 
   return (
-    <div className="min-h-screen bg-[#18181b] text-white p-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-row flex-wrap items-center gap-2 mb-8">
-          <button
-            onClick={() => window.history.back()}
-            className="text-[#cc9b3b] hover:text-[#b88b30] transition focus:outline-none"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#cc9b3b] break-words">
-            Administração de Pedidos
-          </h1>
-        </div>
+    <div className="min-h-screen flex relative bg-gradient-to-b from-[#18181b] to-[#1f1f23] text-white overflow-x-hidden">
+      {/* Drawer Lateral */}
+      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
 
-        {/* FILTRO DE STATUS */}
-        <div className="mb-4">
-          <label className="mr-2">Filtrar por status:</label>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-[#1a1a1a] text-white p-1 rounded-full border border-white"
-          >
-            <option value="all">Todos</option>
-            {Object.entries(STATUS_LABELS).map(([key, label]) => (
-              <option key={key} value={key}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </div>
+      {/* Botão Hamburger Fixo Direito */}
+      <button
+        className={`
+          fixed top-6 right-6 z-50 p-3 rounded-full
+          bg-transparent shadow-2xl
+          transform transition-all duration-300
+          ${drawerOpen ? 'opacity-0 pointer-events-none' : 'opacity-100 hover:scale-110'}
+        `}
+        onClick={() => setDrawerOpen(true)}
+        aria-label="Abrir menu"
+      >
+        <Menu className="w-6 h-6 text-white" />
+      </button>
 
-        <OrderList
-          loading={loading}
-          orders={sortedOrders}
-          onSelectOrder={setSelectedOrder}
-        />
+      {/* Conteúdo Principal */}
+      <div className="flex-1 p-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Cabeçalho com Filtro */}
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#cc9b3b] to-[#ffd166]">
+              Administração
+            </h1>
+
+            <div className="flex items-center gap-2">
+              <label className="text-gray-300 font-semibold">Filtrar:</label>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="bg-[#1a1a1a] text-white p-2 rounded-full border border-[#cc9b3b] focus:ring-2 focus:ring-[#cc9b3b] transition"
+              >
+                <option value="all">Todos</option>
+                {Object.entries(STATUS_LABELS).map(([key, label]) => (
+                  <option key={key} value={key}>{label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Lista de Pedidos com Cards Futuristas */}
+          <OrderList
+            loading={loading}
+            orders={sortedOrders}
+            onSelectOrder={setSelectedOrder}
+          />
+        </div>
       </div>
 
+      {/* Modal de Pedido */}
       {selectedOrder && (
         <OrderModal
           order={selectedOrder}

@@ -70,6 +70,7 @@ supabase/           # Migrations e estrutura do banco
 ## 🖼️ Preview
 
 ![Preview do painel de clientes](public/preview.png)
+![Preview do modal de cliente](public/preview2.png)
 
 ## 📌 Observações
 
@@ -79,8 +80,8 @@ supabase/           # Migrations e estrutura do banco
 
 ## 📄 Licença
 
-Este projeto está sob a licença MIT.
+Este projeto foi desenvolvido por **GLV Informática e Desenvolvimento**. Todos os direitos reservados.
 
 ---
 
-Feito com ❤️ para facilitar a gestão do seu delivery!
+Feito com ❤️ por GLV Informática e Desenvolvimento para facilitar a gestão do seu delivery!

@@ -151,7 +151,7 @@ export default function AdminOrdersPage() {
             const exists = prevOrders.find(o => o.id === newOrder.id)
             if (exists) return prevOrders.map(o => (o.id === newOrder.id ? newOrder : o))
             previousOrderIdsRef.current.add(newOrder.id)
-            if (notificationSoundRef.current) notificationSoundRef.current.play().catch(() => {})
+            if (notificationSoundRef.current) notificationSoundRef.current.play().catch(() => { })
             return [newOrder, ...prevOrders]
           })
         }
@@ -183,8 +183,8 @@ export default function AdminOrdersPage() {
 
   const filteredOrders = orders.filter((o) => statusFilter === 'all' ? true : o.status === statusFilter)
   const sortedOrders = [
-    ...filteredOrders.filter(o => !['delivered','cancelled','rejected'].includes(o.status)),
-    ...filteredOrders.filter(o => ['delivered','cancelled','rejected'].includes(o.status))
+    ...filteredOrders.filter(o => !['delivered', 'cancelled', 'rejected'].includes(o.status)),
+    ...filteredOrders.filter(o => ['delivered', 'cancelled', 'rejected'].includes(o.status))
   ]
 
   // =========================
@@ -227,7 +227,7 @@ export default function AdminOrdersPage() {
         <div className="max-w-7xl mx-auto">
           {/* Cabeçalho */}
           <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#cc9b3b] to-[#ffd166]">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-clip-text text-[#cc9b3b]">
               Administração
             </h1>
 

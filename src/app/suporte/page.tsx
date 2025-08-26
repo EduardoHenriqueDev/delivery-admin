@@ -5,12 +5,17 @@ import { motion } from 'framer-motion'
 import { MessageCircle, Instagram, Facebook, Menu as MenuIcon } from 'lucide-react'
 import Link from 'next/link'
 import Drawer from '../components/Drawer'
+import Image from 'next/image'
+import ParticleBackground from '../../../ui/ParticleBackground'
 
 export default function Page() {
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   return (
-    <div className="flex relative min-h-screen bg-gradient-to-b from-[#0a0a0d] to-[#1a1a1f] text-white">
+    <div className="flex relative min-h-screen text-white overflow-hidden">
+      {/* Background de partículas */}
+      <ParticleBackground />
+
       {/* Drawer */}
       <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
 
@@ -24,7 +29,7 @@ export default function Page() {
       </button>
 
       {/* Conteúdo principal */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 py-12">
+      <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-12">
         {/* Hero */}
         <motion.div
           className="text-center max-w-4xl"
@@ -32,12 +37,21 @@ export default function Page() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#cc9b3b] to-[#ffd166] animate-gradient">
-            Suporte GLV
-          </h1>
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <Image
+              src="/img/branding/logohorizontal.png"
+              alt="GLV Informática"
+              width={500}
+              height={80}
+              priority
+              className="drop-shadow-lg"
+            />
+          </div>
+
           <p className="text-lg md:text-xl text-gray-300 mb-10">
-            Nossa equipe está pronta para levar sua empresa a outro nível com tecnologia de alto desempenho.  
-            <span className="block font-semibold text-[#cc9b3b] mt-3 text-lg md:text-xl">
+            Nossa equipe está pronta para levar sua empresa a outro nível com tecnologia de alto desempenho.
+            <span className="block font-semibold text-[#098fd2] mt-3 text-lg md:text-xl">
               Fale com a gente agora mesmo!
             </span>
           </p>
@@ -86,9 +100,17 @@ export default function Page() {
           transition={{ delay: 0.8, duration: 0.8 }}
         >
           <p className="text-gray-400 mb-1">
-            🚀 GLV Informática & Desenvolvimento
+            🚀{' '}
+            <Link
+              href="https://www.glvinformatica.com.br"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 hover:opacity-80 transition"
+            >
+              GLV Informática e Desenvolvimento
+            </Link>
           </p>
-          <p className="text-[#cc9b3b] font-semibold tracking-wide">
+          <p className="text-[#098fd2] font-semibold tracking-wide">
             Performance • Escalabilidade • Inovação
           </p>
         </motion.div>

@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { X, Home, User, Headset, Menu } from 'lucide-react'
+import { X, Home, User, Headset, Menu, Package } from 'lucide-react'
 import { useState } from 'react'
 
 export default function Drawer() {
@@ -71,6 +71,15 @@ export default function Drawer() {
                 >
                   <User className="w-6 h-6 text-[#cc9b3b]" />
                   <span className="text-lg font-semibold">Clientes</span>
+                </Link>
+
+                <Link
+                  href="/produtos"
+                  className="flex items-center gap-4 text-white hover:text-[#cc9b3b] transition-all duration-300 transform hover:translate-x-2"
+                  onClick={() => setOpen(false)}
+                >
+                  <Package className="w-6 h-6 text-[#cc9b3b]" />
+                  <span className="text-lg font-semibold">Produtos</span>
                 </Link>
 
                 <Link

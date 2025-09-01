@@ -97,6 +97,12 @@ export default function OrderModal({ order, onClose, updating, updateOrderStatus
               <span className="font-semibold">Endereço:</span>{" "}
               {order.delivery_address || <span className="italic text-gray-500">Não informado</span>}
             </div>
+            {/* Delivery Notes */}
+            {order.delivery_notes && (
+              <div className="sm:col-span-2">
+                <span className="font-semibold">Observações da entrega:</span> {order.delivery_notes}
+              </div>
+            )}
             <div><span className="font-semibold">Total:</span> <span className="text-green-400 font-semibold">{formatPrice(order.total_cents)}</span></div>
             {order.notes && <div className="sm:col-span-2"><span className="font-semibold">Observações:</span> {order.notes}</div>}
           </div>

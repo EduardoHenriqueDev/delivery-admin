@@ -8,6 +8,7 @@ import Drawer from '../components/Drawer'
 import CustomerCard from './components/CustomerCard'
 import CustomerModal from './components/CustomerModal'
 import type { Customer, Order } from './types'
+import { Hamburger } from 'lucide-react'
 
 export default function ClientesPage() {
   const [customers, setCustomers] = useState<Customer[]>([])
@@ -95,7 +96,10 @@ export default function ClientesPage() {
         </div>
 
         {loading ? (
-          <p>Carregando...</p>
+          <div className="flex flex-col items-center justify-center h-64 animate-pulse">
+            <Hamburger className="w-16 h-16 text-yellow-400 animate-spin-slow" />
+            <span className="mt-4 text-yellow-400 text-lg font-medium">Carregando clientes...</span>
+          </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {customers.map((c) => (

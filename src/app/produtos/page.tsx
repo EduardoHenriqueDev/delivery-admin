@@ -9,6 +9,7 @@ import Drawer from '../components/Drawer'
 import ProductCard from './components/ProductCard'
 import ProductModal from './components/ProductModal'
 import type { Product } from './types'
+import { Hamburger } from 'lucide-react'
 
 export default function ProdutosPage() {
     const [products, setProducts] = useState<Product[]>([])
@@ -54,7 +55,10 @@ export default function ProdutosPage() {
                 </div>
 
                 {loading ? (
-                    <p>Carregando...</p>
+                    <div className="flex flex-col items-center justify-center h-64 animate-pulse">
+                        <Hamburger className="w-16 h-16 text-yellow-400 animate-spin-slow" />
+                        <span className="mt-4 text-yellow-400 text-lg font-medium">Carregando produtos...</span>
+                    </div>
                 ) : (
                     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {products.map((p) => (

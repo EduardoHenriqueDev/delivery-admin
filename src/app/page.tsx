@@ -26,7 +26,7 @@ export type OrderWithItems = {
   payment_method: string
   total_cents: number
   notes?: string | null
-  delivery_notes?: string | null // <-- Adicionado
+  delivery_notes?: string | null
   status: string
   delivery_lat?: number | null
   delivery_lng?: number | null
@@ -133,7 +133,7 @@ export default function AdminOrdersPage() {
             payment_method: newOrderRaw.payment_method,
             total_cents: newOrderRaw.total_cents,
             notes: newOrderRaw.notes ?? null,
-            delivery_notes: newOrderRaw.delivery_notes ?? null, // <-- Adicionado
+            delivery_notes: newOrderRaw.delivery_notes ?? null,
             status: newOrderRaw.status,
             delivery_lat: newOrderRaw.delivery_lat ?? null,
             delivery_lng: newOrderRaw.delivery_lng ?? null,

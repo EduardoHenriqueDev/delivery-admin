@@ -83,6 +83,15 @@ export default function Drawer() {
                 </Link>
 
                 <Link
+                  href="/embed"
+                  className="flex items-center gap-4 text-white hover:text-[#cc9b3b] transition-all duration-300 transform hover:translate-x-2"
+                  onClick={() => setOpen(false)}
+                >
+                  <Package className="w-6 h-6 text-[#cc9b3b]" />
+                  <span className="text-lg font-semibold">Planilha</span>
+                </Link>
+
+                <Link
                   href="/suporte"
                   className="flex items-center gap-4 text-white hover:text-[#cc9b3b] transition-all duration-300 transform hover:translate-x-2"
                   onClick={() => setOpen(false)}

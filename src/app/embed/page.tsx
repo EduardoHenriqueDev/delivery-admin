@@ -13,7 +13,7 @@ const EmbedPage: FC = () => {
 
                 <div className="flex-1 w-full">
                     <iframe
-                        src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQy0Ylsabv2tjJxetR06WJyEaVvQdAtETIxqAAm6fK2JPOePDGpQsp5tWj8d894Eg/pubhtml?widget=true&amp;headers=false"
+                        src="https://docs.google.com/spreadsheets/d/1F1Yc8NjWdZ3SFK8JF6QnuPPFb1xFaPdO/edit?usp=sharing"
                         className="w-full h-full border-none"
                         allowFullScreen
                     />

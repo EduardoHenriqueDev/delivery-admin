@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { MessageCircle, Instagram, Facebook } from 'lucide-react'
 import Link from 'next/link'
-import Drawer from '../components/Drawer'
+import Drawer from '../../../components/ui/Panel'
 import Image from 'next/image'
 import ParticleBackground from '../../../components/ui/ParticleBackground'
 

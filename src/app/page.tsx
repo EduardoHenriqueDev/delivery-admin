@@ -3,10 +3,11 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { supabase } from '../../lib/supabase'
 import { toast } from 'sonner'
-import Drawer from '../app/components/Drawer'
-import OrderList from './components/order-list'
-import OrderModal from './components/order-modal'
+import Drawer from '../../components/ui/Panel'
+import OrderList from './components/OrderList'
+import OrderModal from './components/OrderModal'
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
+import Navbar from '../../components/ui/Navbar'
 
 export type OrderItem = {
   id: string
@@ -54,6 +55,7 @@ export default function AdminOrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<OrderWithItems | null>(null)
   const [updating, setUpdating] = useState(false)
   const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [searchQuery, setSearchQuery] = useState('') // search state
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   const previousOrderIdsRef = useRef<Set<string>>(new Set())
@@ -91,7 +93,7 @@ export default function AdminOrdersPage() {
             payment_method: order.payment_method,
             total_cents: order.total_cents,
             notes: order.notes ?? null,
-            delivery_notes: order.delivery_notes ?? null, // <-- Adicionado
+            delivery_notes: order.delivery_notes ?? null,
             status: order.status,
             delivery_lat: order.delivery_lat ?? null,
             delivery_lng: order.delivery_lng ?? null,
@@ -183,15 +185,25 @@ export default function AdminOrdersPage() {
     setUpdating(false)
   }
 
-  const filteredOrders = orders.filter((o) => statusFilter === 'all' ? true : o.status === statusFilter)
+  const filteredOrders = orders
+    .filter((o) => (statusFilter === 'all' ? true : o.status === statusFilter))
+    .filter((o) => {
+      const q = searchQuery.trim().toLowerCase()
+      if (!q) return true
+      return (
+        o.customer_name?.toLowerCase().includes(q) ||
+        o.customer_phone?.toLowerCase().includes(q) ||
+        o.delivery_address?.toLowerCase().includes(q) ||
+        o.id?.toLowerCase().includes(q) ||
+        o.items?.some((i) => i.product?.name?.toLowerCase().includes(q))
+      )
+    })
+
   const sortedOrders = [
     ...filteredOrders.filter(o => !['delivered', 'cancelled', 'rejected'].includes(o.status)),
     ...filteredOrders.filter(o => ['delivered', 'cancelled', 'rejected'].includes(o.status))
   ]
 
-  // =========================
-  // GANHOS DO DIA
-  // =========================
   const today = useMemo(() => {
     const now = new Date()
     return orders.filter(o => {
@@ -207,40 +219,43 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="min-h-screen flex relative bg-gradient-to-b from-[#18181b] to-[#1f1f23] text-white overflow-x-hidden">
-
-      <Drawer />
+      <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} />
 
       {/* Conteúdo Principal */}
-      <div className="flex-1 p-6 pl-20">
+      <div className="flex-1 p-6 pt-0">
+        {/* Navbar edge-to-edge dentro da área de conteúdo */}
+        <div className="-mx-6">
+          <Navbar
+            title="Administração"
+            showMenuButton
+            isMenuOpen={drawerOpen}
+            onMenuClick={() => setDrawerOpen(!drawerOpen)}
+            showSearch
+            searchValue={searchQuery}
+            onSearchChange={setSearchQuery}
+            searchPlaceholder="Buscar por nome, telefone, produto..."
+            showFilter
+            filterLabel="Filtrar:"
+            filterValue={statusFilter}
+            filterOptions={[
+              { value: 'all', label: 'Todos' },
+              ...Object.entries(STATUS_LABELS).map(([value, label]) => ({ value, label }))
+            ]}
+            onFilterChange={(v) => setStatusFilter(v)}
+          />
+        </div>
+
         <div className="max-w-7xl mx-auto">
-          {/* Cabeçalho */}
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-clip-text text-[#cc9b3b]">
-              Administração
-            </h1>
-
-            <div className="flex items-center gap-2">
-              <label className="text-gray-300 font-semibold">Filtrar:</label>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="bg-[#1a1a1a] text-white p-2 rounded-full border border-[#cc9b3b] focus:ring-2 focus:ring-[#cc9b3b] transition"
-              >
-                <option value="all">Todos</option>
-                {Object.entries(STATUS_LABELS).map(([key, label]) => (
-                  <option key={key} value={key}>{label}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
           {/* Card de Ganhos do Dia */}
-          <div className="mb-6 p-4 rounded-2xl bg-gray-800 border border-yellow-400 flex items-center justify-between max-w-sm">
+          <div className="mb-6 p-4 rounded-2xl bg-[#141416] border border-yellow-400 flex items-center justify-between max-w-sm">
             <span className="font-semibold text-yellow-400 text-lg">Ganhos do dia</span>
             <span className="text-green-400 font-bold text-xl">{formatPrice(dailyRevenueCents)}</span>
           </div>
+          {/* Lista de Pedidos movida para fora para ocupar 100% */}
+        </div>
 
-          {/* Lista de Pedidos */}
+        {/* OrderList full-width */}
+        <div className="px-4 sm:px-6 lg:px-8 max-w-screen-2xl mx-auto w-full">
           <OrderList
             loading={loading}
             orders={sortedOrders}

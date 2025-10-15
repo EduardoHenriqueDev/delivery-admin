@@ -2,7 +2,7 @@
 
 import { Hamburger } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import OrderCard from './order-card'
+import OrderCard from './OrderCard'
 import type { OrderWithItems } from '../page'
 
 interface OrderListProps {
@@ -14,7 +14,7 @@ interface OrderListProps {
 export default function OrderList({ loading, orders, onSelectOrder }: OrderListProps) {
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 animate-pulse">
+      <div className="flex flex-col items-center justify-center h-64 animate-pulse w-full rounded-xl">
         <Hamburger className="w-16 h-16 text-yellow-400 animate-spin-slow" />
         <span className="mt-4 text-yellow-400 text-lg font-medium">Carregando pedidos...</span>
       </div>
@@ -23,18 +23,19 @@ export default function OrderList({ loading, orders, onSelectOrder }: OrderListP
 
   if (orders.length === 0) {
     return (
-      <div className="text-center text-gray-400 col-span-full text-lg py-10">
+      <div className="text-center text-gray-400 col-span-full text-lg py-10 w-full rounded-xl">
         Nenhum pedido encontrado.
       </div>
     )
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="w-full flex flex-wrap gap-6 justify-start">
       <AnimatePresence>
         {orders.map((order) => (
           <motion.div
             key={order.id}
+            className="basis-[320px] w-[320px] shrink-0 grow-0"
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}

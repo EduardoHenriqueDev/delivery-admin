@@ -13,7 +13,6 @@ interface OrderCardProps {
 export default function OrderCard({ order, onClick }: OrderCardProps) {
     const [showQR, setShowQR] = useState(false)
 
-    // Considera entregues, cancelados e rejeitados como "apagados"
     const isInactive =
         order.status === 'delivered' || order.status === 'cancelled' || order.status === 'rejected'
 
@@ -43,8 +42,8 @@ export default function OrderCard({ order, onClick }: OrderCardProps) {
     return (
         <div
             className={`group relative rounded-2xl p-5 shadow-lg cursor-pointer transition-all border ${isInactive
-                ? 'bg-gray-900 border-gray-700 opacity-60 hover:opacity-80'
-                : 'bg-gray-800 border-gray-700 hover:shadow-2xl'
+                ? 'bg-[#141416] border-[#333] opacity-60 hover:opacity-80'
+                : 'bg-[#141416] border-[#333] hover:shadow-2xl'
                 }`}
             onClick={onClick}
         >
@@ -107,7 +106,7 @@ export default function OrderCard({ order, onClick }: OrderCardProps) {
                     </button>
 
                     {showQR && (
-                        <div className="mt-2 p-2 bg-gray-900 rounded-xl border border-yellow-400">
+                        <div className="mt-2 p-2 bg-[#1f1f23] rounded-xl border border-yellow-400">
                             <QRCodeCanvas
                                 value={mapsLink}
                                 size={150}

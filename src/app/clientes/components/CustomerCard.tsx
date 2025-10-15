@@ -14,7 +14,7 @@ export default function CustomerCard({ customer, onClick }: CustomerCardProps) {
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
     >
-      <div className="bg-[#1f1f23] border border-[#2a2a2f] rounded-2xl shadow-lg cursor-pointer hover:border-[#cc9b3b] transition p-6 space-y-3">
+      <div className="bg-[#141416] border border-[#2a2a2f] rounded-2xl shadow-lg cursor-pointer hover:border-[#cc9b3b] transition p-6 space-y-3">
         <div className="flex items-center gap-2">
           <User className="w-5 h-5 text-[#cc9b3b]" />
           <span className="font-semibold">{customer.name}</span>

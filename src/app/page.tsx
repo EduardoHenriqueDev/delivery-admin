@@ -3,11 +3,11 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { supabase } from '../../lib/supabase'
 import { toast } from 'sonner'
-import Drawer from '../../components/ui/Panel'
+import Drawer from '../../components/Panel'
 import OrderList from './components/OrderList'
 import OrderModal from './components/OrderModal'
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
-import Navbar from '../../components/ui/Navbar'
+import Navbar from '../../components/Navbar'
 
 export type OrderItem = {
   id: string
@@ -247,8 +247,8 @@ export default function AdminOrdersPage() {
 
         <div className="max-w-7xl mx-auto">
           {/* Card de Ganhos do Dia */}
-          <div className="mb-6 p-4 rounded-2xl bg-[#141416] border border-yellow-400 flex items-center justify-between max-w-sm">
-            <span className="font-semibold text-yellow-400 text-lg">Ganhos do dia</span>
+          <div className="mb-6 p-4 rounded-2xl bg-[#141416] border border-[#cc9b3b] flex items-center justify-between max-w-sm">
+            <span className="font-semibold text-[#cc9b3b] text-lg">Ganhos do dia</span>
             <span className="text-green-400 font-bold text-xl">{formatPrice(dailyRevenueCents)}</span>
           </div>
           {/* Lista de Pedidos movida para fora para ocupar 100% */}

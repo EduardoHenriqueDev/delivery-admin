@@ -11,7 +11,7 @@ interface Props {
 export default function ProductCard({ product, onClick }: Props) {
     return (
         <motion.div
-            className="bg-[#1f1f23] p-6 rounded-2xl shadow-lg border border-[#2a2a2f] hover:border-[#cc9b3b] cursor-pointer transition"
+            className="bg-[#141416] p-6 rounded-2xl shadow-lg border border-[#2a2a2f] hover:border-[#cc9b3b] cursor-pointer transition"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             onClick={onClick} // abre o modal

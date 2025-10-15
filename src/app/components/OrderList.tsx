@@ -15,8 +15,8 @@ export default function OrderList({ loading, orders, onSelectOrder }: OrderListP
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-64 animate-pulse w-full rounded-xl">
-        <Hamburger className="w-16 h-16 text-yellow-400 animate-spin-slow" />
-        <span className="mt-4 text-yellow-400 text-lg font-medium">Carregando pedidos...</span>
+        <Hamburger className="w-16 h-16 text-[#cc9b3b] animate-spin-slow" />
+        <span className="mt-4 text-[#cc9b3b] text-lg font-medium">Carregando pedidos...</span>
       </div>
     )
   }

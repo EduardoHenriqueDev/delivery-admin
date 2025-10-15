@@ -1,7 +1,7 @@
 'use client'
 
 import { FC } from 'react'
-import Drawer from '../../../components/ui/Panel'
+import Drawer from '../../../components/Panel'
 
 const EmbedPage: FC = () => {
     return (

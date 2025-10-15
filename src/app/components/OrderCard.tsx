@@ -42,14 +42,14 @@ export default function OrderCard({ order, onClick }: OrderCardProps) {
     return (
         <div
             className={`group relative rounded-2xl p-5 shadow-lg cursor-pointer transition-all border ${isInactive
-                ? 'bg-[#141416] border-[#333] opacity-60 hover:opacity-80'
-                : 'bg-[#141416] border-[#333] hover:shadow-2xl'
+                ? 'bg-[#141416] border-[#333] hover:border-[#cc9b3b] opacity-60 hover:opacity-80'
+                : 'bg-[#141416] border-[#333] hover:border-[#cc9b3b] hover:shadow-2xl'
                 }`}
             onClick={onClick}
         >
             {/* Top Row: Order ID + Status */}
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-semibold text-yellow-400 tracking-wide">
+                <h3 className="text-xl font-semibold text-[#cc9b3b] tracking-wide">
                     #{order.id.slice(0, 8)}
                 </h3>
 
@@ -99,7 +99,7 @@ export default function OrderCard({ order, onClick }: OrderCardProps) {
                             e.stopPropagation()
                             setShowQR(!showQR)
                         }}
-                        className="flex items-center gap-2 px-3 py-1 bg-yellow-400 text-black rounded-lg text-sm font-semibold hover:bg-yellow-500 transition"
+                        className="flex items-center gap-2 px-3 py-1 bg-[#cc9b3b] text-black rounded-lg text-sm font-semibold hover:bg-[#cc9b3b] transition"
                     >
                         <QrCode className="w-4 h-4" />
                         {showQR ? 'Fechar QR' : 'Gerar QR para Maps'}

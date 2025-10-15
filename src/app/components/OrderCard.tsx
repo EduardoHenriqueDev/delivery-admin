@@ -110,7 +110,7 @@ export default function OrderCard({ order, onClick }: OrderCardProps) {
                             <QRCodeCanvas
                                 value={mapsLink}
                                 size={150}
-                                fgColor="#FFD166"
+                                fgColor="#cc9b3b"
                                 bgColor="#1f1f23"
                             />
                         </div>

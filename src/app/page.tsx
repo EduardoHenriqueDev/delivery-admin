@@ -251,10 +251,8 @@ export default function AdminOrdersPage() {
             <span className="font-semibold text-[#cc9b3b] text-lg">Ganhos do dia</span>
             <span className="text-green-400 font-bold text-xl">{formatPrice(dailyRevenueCents)}</span>
           </div>
-          {/* Lista de Pedidos movida para fora para ocupar 100% */}
         </div>
 
-        {/* OrderList full-width */}
         <div className="px-4 sm:px-6 lg:px-8 max-w-screen-2xl mx-auto w-full">
           <OrderList
             loading={loading}

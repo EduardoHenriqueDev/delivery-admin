@@ -1,15 +1,25 @@
 'use client'
 
-import { FC } from 'react'
-import Drawer from '../../../components/Panel'
+import { FC, useState } from 'react'
+import Panel from '../../../components/Panel'
+import Navbar from '../../../components/Navbar'
 
 const EmbedPage: FC = () => {
+    const [drawerOpen, setDrawerOpen] = useState(false)
+
     return (
-        <div className="relative flex min-h-screen bg-[#121212]">
+        <div className="relative flex min-h-screen bg-[#121212] text-white">
+            <Panel open={drawerOpen} onOpenChange={setDrawerOpen} />
 
-            <Drawer />
-
-            <div className="flex flex-col flex-1">
+            <div className="flex flex-col flex-1 p-6 pt-0">
+                <div className="-mx-6">
+                    <Navbar
+                        title="Planilha"
+                        showMenuButton
+                        isMenuOpen={drawerOpen}
+                        onMenuClick={() => setDrawerOpen(!drawerOpen)}
+                    />
+                </div>
 
                 <div className="flex-1 w-full">
                     <iframe
@@ -18,7 +28,6 @@ const EmbedPage: FC = () => {
                         allowFullScreen
                     />
                 </div>
-
             </div>
         </div>
     )
